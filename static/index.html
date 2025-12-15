@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <title>步態分析報告產生器</title>
     <style>
-        * {
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; }
 
         body {
             margin: 0;
@@ -27,28 +25,14 @@
             max-width: 520px;
             background: #ffffff;
             border-radius: 22px;
-            padding: 32px 32px 26px;
+            padding: 32px;
             box-shadow: 0 18px 45px rgba(15, 23, 42, 0.14);
             position: relative;
-            overflow: hidden;
-        }
-
-        .container::before {
-            /* 左上角一點點漸層裝飾 */
-            content: "";
-            position: absolute;
-            inset: -40px auto auto -40px;
-            width: 140px;
-            height: 140px;
-            background: radial-gradient(circle, rgba(34,197,94,0.4), rgba(34,197,94,0));
-            opacity: 0.8;
-            pointer-events: none;
         }
 
         h1 {
             margin: 0;
             font-size: 26px;
-            letter-spacing: 0.06em;
             display: flex;
             align-items: center;
             gap: 8px;
@@ -59,7 +43,6 @@
             height: 10px;
             border-radius: 999px;
             background: linear-gradient(135deg, #16a34a, #22c55e);
-            display: inline-block;
         }
 
         .subtitle {
@@ -72,7 +55,6 @@
             margin-top: 26px;
             display: flex;
             gap: 14px;
-            flex-wrap: wrap;
         }
 
         button {
@@ -82,40 +64,24 @@
             cursor: pointer;
             font-size: 15px;
             font-weight: 600;
-            letter-spacing: 0.03em;
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            transition: all 0.18s ease;
         }
 
         #uploadBtn {
             background: #020617;
             color: #f9fafb;
-            box-shadow: 0 8px 18px rgba(15, 23, 42, 0.35);
-        }
-
-        #uploadBtn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 10px 24px rgba(15, 23, 42, 0.45);
         }
 
         #runBtn {
             background: linear-gradient(135deg, #22c55e, #16a34a);
             color: #ffffff;
-            box-shadow: 0 8px 18px rgba(22,163,74,0.35);
-        }
-
-        #runBtn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 10px 24px rgba(22,163,74,0.45);
         }
 
         #runBtn:disabled {
             opacity: 0.4;
             cursor: not-allowed;
-            box-shadow: none;
-            transform: none;
         }
 
         .file-pill {
@@ -128,7 +94,6 @@
             align-items: center;
             gap: 8px;
             font-size: 14px;
-            color: #4b5563;
         }
 
         .file-pill .dot {
@@ -151,90 +116,52 @@
             gap: 6px;
         }
 
-        #status.error {
-            color: #b91c1c;
-        }
-
-        #status.ok {
-            color: #15803d;
-        }
-
-        #status span.bullet {
-            font-size: 16px;
-        }
+        #status.error { color: #b91c1c; }
+        #status.ok { color: #15803d; }
 
         #pdfLink {
             display: none;
             margin-top: 20px;
             padding: 9px 18px;
             background: #2563eb;
-            color: #f9fafb;
+            color: #ffffff;
             text-decoration: none;
             border-radius: 999px;
             font-size: 14px;
             font-weight: 600;
-            letter-spacing: 0.03em;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            box-shadow: 0 10px 24px rgba(37,99,235,0.35);
-            transition: all 0.18s ease;
-        }
-
-        #pdfLink:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 14px 32px rgba(37,99,235,0.45);
-        }
-
-        #hint {
-            margin-top: 10px;
-            font-size: 12px;
-            color: #9ca3af;
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>
-            <span class="logo-dot"></span>
-            步態分析報告產生器
-        </h1>
-        <div class="subtitle">
-            上傳步態 JSON，系統會自動產生 PDF 報告。
-        </div>
+<div class="container">
+    <h1><span class="logo-dot"></span>步態分析報告產生器</h1>
+    <div class="subtitle">上傳步態 JSON，系統會自動產生 PDF 報告。</div>
 
-        <div class="btn-row">
-            <button id="uploadBtn">
-                📁 選擇 JSON 檔案
-            </button>
-            <button id="runBtn" disabled>
-                ▶ 開始分析
-            </button>
-        </div>
-
-        <input type="file" id="fileInput" accept=".json" style="display:none;" />
-
-        <div id="filePill" class="file-pill">
-            <span class="dot"></span>
-            <span id="fileName">尚未選擇檔案</span>
-        </div>
-
-        <div id="status">
-            <span class="bullet">●</span>
-            <span>請先選擇 JSON 檔案。</span>
-        </div>
-
-        <a id="pdfLink" target="_blank">
-            📄 開啟 PDF 報告
-        </a>
-
-        <div id="hint">
-            ※ 產生報告過程可能需要數秒，請勿關閉此頁面。
-        </div>
+    <div class="btn-row">
+        <button id="uploadBtn">📁 選擇 JSON 檔案</button>
+        <button id="runBtn" disabled>▶ 開始分析</button>
     </div>
 
+    <input type="file" id="fileInput" accept=".json" hidden>
+
+    <div id="filePill" class="file-pill">
+        <span class="dot"></span>
+        <span id="fileName">尚未選擇檔案</span>
+    </div>
+
+    <div id="status">
+        <span>●</span>
+        <span>請先選擇 JSON 檔案。</span>
+    </div>
+
+    <a id="pdfLink" target="_blank">📄 開啟 PDF 報告</a>
+</div>
+
 <script>
+/* ✅ 你的 Render 後端網址 */
+const BACKEND_URL = "https://gait-report-api.onrender.com";
+
 const uploadBtn = document.getElementById("uploadBtn");
 const runBtn = document.getElementById("runBtn");
 const fileInput = document.getElementById("fileInput");
@@ -246,9 +173,8 @@ const fileNameSpan = document.getElementById("fileName");
 let selectedFile = null;
 
 function setStatus(text, type = "") {
-    statusDiv.className = "";
-    if (type) statusDiv.classList.add(type);
-    statusDiv.innerHTML = `<span class="bullet">●</span><span>${text}</span>`;
+    statusDiv.className = type;
+    statusDiv.innerHTML = `<span>●</span><span>${text}</span>`;
 }
 
 uploadBtn.onclick = () => fileInput.click();
@@ -260,7 +186,7 @@ fileInput.onchange = () => {
         fileNameSpan.innerText = selectedFile.name;
         filePill.classList.add("ready");
         runBtn.disabled = false;
-        setStatus("檔案已選擇，按下「開始分析」產生報告。", "ok");
+        setStatus("檔案已選擇，按下「開始分析」。", "ok");
     } else {
         fileNameSpan.innerText = "尚未選擇檔案";
         filePill.classList.remove("ready");
@@ -272,12 +198,7 @@ fileInput.onchange = () => {
 };
 
 runBtn.onclick = async () => {
-    if (!selectedFile) {
-        setStatus("請先選擇 JSON 檔案。", "error");
-        return;
-    }
-
-    setStatus("分析中，請稍候…", "");
+    setStatus("分析中，請稍候…");
     runBtn.disabled = true;
     pdfLink.style.display = "none";
 
@@ -285,7 +206,7 @@ runBtn.onclick = async () => {
     formData.append("file", selectedFile);
 
     try {
-        const resp = await fetch("/run", {
+        const resp = await fetch(`${BACKEND_URL}/run`, {
             method: "POST",
             body: formData
         });
@@ -293,18 +214,17 @@ runBtn.onclick = async () => {
         const data = await resp.json();
 
         if (!resp.ok) {
-            setStatus("發生錯誤：" + (data.error || "未知錯誤"), "error");
-            runBtn.disabled = false;
+            setStatus(data.error || "分析失敗", "error");
             return;
         }
 
-        setStatus("分析完成！點擊下方按鈕開啟 PDF 報告。", "ok");
-        pdfLink.href = data.pdf_url;
+        setStatus("分析完成！點擊下方按鈕開啟 PDF。", "ok");
+        pdfLink.href = `${BACKEND_URL}${data.pdf_url}`;
         pdfLink.style.display = "inline-flex";
 
-    } catch (err) {
-        console.error(err);
-        setStatus("連線失敗，請確認伺服器是否有啟動。", "error");
+    } catch (e) {
+        console.error(e);
+        setStatus("無法連線到後端伺服器", "error");
     } finally {
         runBtn.disabled = false;
     }
