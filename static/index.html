@@ -1,235 +1,148 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-    <meta charset="UTF-8">
-    <title>步態分析報告產生器</title>
-    <style>
-        * { box-sizing: border-box; }
-
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: "Microsoft JhengHei", -apple-system, BlinkMacSystemFont,
-                         "Segoe UI", sans-serif;
-            background: radial-gradient(circle at top left, #e0f4ff 0%, #f8fafc 55%, #eef2ff 100%);
-            color: #1f2933;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            min-height: 100vh;
-        }
-
-        .container {
-            margin-top: 60px;
-            width: 100%;
-            max-width: 520px;
-            background: #ffffff;
-            border-radius: 22px;
-            padding: 32px;
-            box-shadow: 0 18px 45px rgba(15, 23, 42, 0.14);
-            position: relative;
-        }
-
-        h1 {
-            margin: 0;
-            font-size: 26px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        h1 span.logo-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 999px;
-            background: linear-gradient(135deg, #16a34a, #22c55e);
-        }
-
-        .subtitle {
-            margin-top: 6px;
-            font-size: 14px;
-            color: #6b7280;
-        }
-
-        .btn-row {
-            margin-top: 26px;
-            display: flex;
-            gap: 14px;
-        }
-
-        button {
-            padding: 11px 22px;
-            border-radius: 999px;
-            border: none;
-            cursor: pointer;
-            font-size: 15px;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        #uploadBtn {
-            background: #020617;
-            color: #f9fafb;
-        }
-
-        #runBtn {
-            background: linear-gradient(135deg, #22c55e, #16a34a);
-            color: #ffffff;
-        }
-
-        #runBtn:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-        }
-
-        .file-pill {
-            margin-top: 18px;
-            padding: 10px 14px;
-            border-radius: 999px;
-            border: 1px solid #e5e7eb;
-            background: #f9fafb;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 14px;
-        }
-
-        .file-pill .dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 999px;
-            background: #9ca3af;
-        }
-
-        .file-pill.ready .dot {
-            background: #22c55e;
-        }
-
-        #status {
-            margin-top: 14px;
-            font-size: 14px;
-            color: #6b7280;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        #status.error { color: #b91c1c; }
-        #status.ok { color: #15803d; }
-
-        #pdfLink {
-            display: none;
-            margin-top: 20px;
-            padding: 9px 18px;
-            background: #2563eb;
-            color: #ffffff;
-            text-decoration: none;
-            border-radius: 999px;
-            font-size: 14px;
-            font-weight: 600;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <title>步態分析報告產生器</title>
+  <style>
+    * { box-sizing: border-box; }
+    body{
+      margin:0;padding:0;
+      font-family:"Microsoft JhengHei",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:radial-gradient(circle at top left,#e0f4ff 0%,#f8fafc 55%,#eef2ff 100%);
+      color:#1f2933;
+      display:flex;justify-content:center;align-items:flex-start;
+      min-height:100vh;
+    }
+    .container{
+      margin-top:60px;width:100%;max-width:520px;
+      background:#fff;border-radius:22px;padding:32px;
+      box-shadow:0 18px 45px rgba(15,23,42,.14);
+    }
+    h1{margin:0;font-size:26px;display:flex;align-items:center;gap:8px;}
+    h1 span.logo-dot{width:10px;height:10px;border-radius:999px;background:linear-gradient(135deg,#16a34a,#22c55e);}
+    .subtitle{margin-top:6px;font-size:14px;color:#6b7280;}
+    .btn-row{margin-top:26px;display:flex;gap:14px;}
+    button{
+      padding:11px 22px;border-radius:999px;border:none;cursor:pointer;
+      font-size:15px;font-weight:600;display:inline-flex;align-items:center;gap:8px;
+    }
+    #uploadBtn{background:#020617;color:#f9fafb;}
+    #runBtn{background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;}
+    #runBtn:disabled{opacity:.4;cursor:not-allowed;}
+    .file-pill{
+      margin-top:18px;padding:10px 14px;border-radius:999px;border:1px solid #e5e7eb;
+      background:#f9fafb;display:flex;align-items:center;gap:8px;font-size:14px;
+    }
+    .file-pill .dot{width:8px;height:8px;border-radius:999px;background:#9ca3af;}
+    .file-pill.ready .dot{background:#22c55e;}
+    #status{margin-top:14px;font-size:14px;color:#6b7280;display:flex;align-items:center;gap:6px;}
+    #status.error{color:#b91c1c;}
+    #status.ok{color:#15803d;}
+    #pdfLink{
+      display:none;margin-top:20px;padding:9px 18px;background:#2563eb;color:#fff;text-decoration:none;
+      border-radius:999px;font-size:14px;font-weight:600;
+    }
+  </style>
 </head>
 <body>
-
-<div class="container">
+  <div class="container">
     <h1><span class="logo-dot"></span>步態分析報告產生器</h1>
     <div class="subtitle">上傳步態 JSON，系統會自動產生 PDF 報告。</div>
 
     <div class="btn-row">
-        <button id="uploadBtn">📁 選擇 JSON 檔案</button>
-        <button id="runBtn" disabled>▶ 開始分析</button>
+      <button id="uploadBtn">📁 選擇 JSON 檔案</button>
+      <button id="runBtn" disabled>▶ 開始分析</button>
     </div>
 
-    <input type="file" id="fileInput" accept=".json" hidden>
+    <input type="file" id="fileInput" accept=".json" hidden />
 
     <div id="filePill" class="file-pill">
-        <span class="dot"></span>
-        <span id="fileName">尚未選擇檔案</span>
+      <span class="dot"></span>
+      <span id="fileName">尚未選擇檔案</span>
     </div>
 
     <div id="status">
-        <span>●</span>
-        <span>請先選擇 JSON 檔案。</span>
+      <span>●</span>
+      <span>請先選擇 JSON 檔案。</span>
     </div>
 
     <a id="pdfLink" target="_blank">📄 開啟 PDF 報告</a>
-</div>
+  </div>
 
-<script>
-/* ✅ 你的 Render 後端網址 */
-const BACKEND_URL = "https://gait-report-api.onrender.com";
+  <script>
+    const BACKEND_URL = "https://gait-report-api.onrender.com";
 
-const uploadBtn = document.getElementById("uploadBtn");
-const runBtn = document.getElementById("runBtn");
-const fileInput = document.getElementById("fileInput");
-const statusDiv = document.getElementById("status");
-const pdfLink = document.getElementById("pdfLink");
-const filePill = document.getElementById("filePill");
-const fileNameSpan = document.getElementById("fileName");
+    const uploadBtn = document.getElementById("uploadBtn");
+    const runBtn = document.getElementById("runBtn");
+    const fileInput = document.getElementById("fileInput");
+    const statusDiv = document.getElementById("status");
+    const pdfLink = document.getElementById("pdfLink");
+    const filePill = document.getElementById("filePill");
+    const fileNameSpan = document.getElementById("fileName");
 
-let selectedFile = null;
+    let selectedFile = null;
 
-function setStatus(text, type = "") {
-    statusDiv.className = type;
-    statusDiv.innerHTML = `<span>●</span><span>${text}</span>`;
-}
+    function setStatus(text, type="") {
+      statusDiv.className = type;
+      statusDiv.innerHTML = `<span>●</span><span>${text}</span>`;
+    }
 
-uploadBtn.onclick = () => fileInput.click();
+    uploadBtn.onclick = () => fileInput.click();
 
-fileInput.onchange = () => {
-    selectedFile = fileInput.files[0] || null;
+    fileInput.onchange = () => {
+      selectedFile = fileInput.files[0] || null;
 
-    if (selectedFile) {
+      if (selectedFile) {
         fileNameSpan.innerText = selectedFile.name;
         filePill.classList.add("ready");
         runBtn.disabled = false;
         setStatus("檔案已選擇，按下「開始分析」。", "ok");
-    } else {
+      } else {
         fileNameSpan.innerText = "尚未選擇檔案";
         filePill.classList.remove("ready");
         runBtn.disabled = true;
         setStatus("請先選擇 JSON 檔案。");
-    }
+      }
+      pdfLink.style.display = "none";
+    };
 
-    pdfLink.style.display = "none";
-};
+    runBtn.onclick = async () => {
+      if (!selectedFile) return;
 
-runBtn.onclick = async () => {
-    setStatus("分析中，請稍候…");
-    runBtn.disabled = true;
-    pdfLink.style.display = "none";
+      setStatus("分析中，請稍候…");
+      runBtn.disabled = true;
+      pdfLink.style.display = "none";
 
-    const formData = new FormData();
-    formData.append("file", selectedFile);
+      const formData = new FormData();
+      formData.append("file", selectedFile);
 
-    try {
+      try {
         const resp = await fetch(`${BACKEND_URL}/run`, {
-            method: "POST",
-            body: formData
+          method: "POST",
+          body: formData,
+          mode: "cors",
         });
 
-        const data = await resp.json();
+        const raw = await resp.text();
+        let data = {};
+        try { data = JSON.parse(raw); } catch (_) {}
 
         if (!resp.ok) {
-            setStatus(data.error || "分析失敗", "error");
-            return;
+          setStatus(data.error || raw || "分析失敗", "error");
+          return;
         }
 
         setStatus("分析完成！點擊下方按鈕開啟 PDF。", "ok");
-        pdfLink.href = `${BACKEND_URL}${data.pdf_url}`;
+        // ✅ 後端回傳完整網址，直接用
+        pdfLink.href = data.pdf_url;
         pdfLink.style.display = "inline-flex";
-
-    } catch (e) {
+      } catch (e) {
         console.error(e);
-        setStatus("無法連線到後端伺服器", "error");
-    } finally {
+        setStatus("無法連線到後端伺服器（請按 F12 看 Console 是否 CORS / 502）", "error");
+      } finally {
         runBtn.disabled = false;
-    }
-};
-</script>
-
+      }
+    };
+  </script>
 </body>
 </html>
